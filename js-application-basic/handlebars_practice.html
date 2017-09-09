@@ -7,7 +7,7 @@
     <script src="handlebars.js"></script>
   </head>
   <body>
-    <div id="context">
+    <div id="x">
     </div>
 
     <!-- テンプレートを定義 -->
@@ -17,7 +17,10 @@
         <div class="body">
           {{body}}<br>
           {{body_escape}}<br>
-          {{{body_escape}}}
+          {{{body_escape}}}<br>
+					<p>-----------------------</p>
+					{{sample}}<br>
+					{{{sample}}}
         </div>
       </div>
     </script>
@@ -29,6 +32,7 @@
       var context = {
         title: "My New Post",
         body: "This is my first post!",
+				sample: "<b>this is sample message<b>",
         body_escape: "<strong>escape</strong>"
       }
       var html = template(context);
