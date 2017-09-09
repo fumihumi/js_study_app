@@ -26,6 +26,7 @@ App.prototype.bindEvents = function() {
   $('#js-tweet-body').on('keydown', this.tweet.bind(this));
   //bindは関数オブジェクトに対して利用することが多い？
   //今回の場合はbind(this)とすることで、Appのtweetプロパティを明示的に表している。
+  $('#js-tweets').on('click', '.js-destroy', this.destroy.bind(this));
 };
 
 var Tweet = function(body){
@@ -37,9 +38,10 @@ var Tweet = function(body){
   this.createdAt;
   this.isFaborited = false;
 }
+
 App.prototype.tweet = function (e) {
   //引数の”e”にはイベント情報が詰まっている。
-  if(e.keyCode == 13){
+  if(e.keyCode === 13){
     //e.keycodeとしてあげることで"e"のイベントが発生した時にタイプされていたキーを取得することができる。
     //keycode == 13 というのはenterが押された時のコード。
     e.preventDefault();
@@ -48,7 +50,7 @@ App.prototype.tweet = function (e) {
     var $tweetBody = $("#js-tweet-body");
     var body = $tweetBody.val(); //投稿内容の変数格納
     if(body.length !== 0){
-      var tweet = new Tweet(body)
+      var tweet = new Tweet(body);
       this.tweets.unshift(tweet);
       this.render();
       $tweetBody.val("");
@@ -67,8 +69,17 @@ App.prototype.tweetIndexByUuid = function(uuid){
   }
 };
 
+//特定のuuidを持つtweetを配列から削除するメソッド
+App.prototype.destroy = function(e){
+  e.preventDefault();//aタグがほんらい持っている画面繊維をキャンセルする
+  var uuid = $(e.target).closest('section').data('uuid');
+  this.tweets.splice(this.tweetIndexByUuid(uuid),1);
+  this.render();
+};
+
 App.prototype.render = function (){
-  $("#js-tweets").html(this.tweetTemplate(this.tweets));
+  $('#js-tweets').html(this.tweetTemplate(this.tweets));
+  console.log("rendered");
 }
 
 // applicationの起動
