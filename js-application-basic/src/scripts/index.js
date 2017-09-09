@@ -1,6 +1,6 @@
 // tweetに個別の識別番号を付与する為のロジック
 var utils = {
-  uuid: function () {
+  uuid: function() {
     var i, random;
     var uuid = '';
 
@@ -27,21 +27,28 @@ App.prototype.bindEvents = function() {
   //bindは関数オブジェクトに対して利用することが多い？
   //今回の場合はbind(this)とすることで、Appのtweetプロパティを明示的に表している。
   $('#js-tweets').on('click', '.js-destroy', this.destroy.bind(this));
+  $('#js-tweets').on('click', '.js-favorite', this.favAction.bind(this));
 };
 
-var Tweet = function(body){
+var Tweet = function(body) {
   //Tweetという関数オブジェクトにプロパティを追加していく。
-//コンストラクタ関数には生成するオブジェクトにもたせたい情報をthis.[プロパティ名]として定義していく
-//今回のもたせたい情報は[uuid,body,is favorited]の三つなのでそれぞれ
+  //コンストラクタ関数には生成するオブジェクトにもたせたい情報をthis.[プロパティ名]として定義していく
+  //今回のもたせたい情報は[uuid,body,is favorited]の三つなのでそれぞれ
   this.uuid = utils.uuid();
   this.body = body;
   this.createdAt;
-  this.isFaborited = false;
+  this.isFavorited = false;
 }
+Tweet.prototype.favorite = function() {
+  this.isFavorited = true;
+};
 
-App.prototype.tweet = function (e) {
+Tweet.prototype.unfavorite = function() {
+  this.isFavorited = false;
+};
+App.prototype.tweet = function(e) {
   //引数の”e”にはイベント情報が詰まっている。
-  if(e.keyCode === 13){
+  if (e.keyCode === 13) {
     //e.keycodeとしてあげることで"e"のイベントが発生した時にタイプされていたキーを取得することができる。
     //keycode == 13 というのはenterが押された時のコード。
     e.preventDefault();
@@ -49,7 +56,7 @@ App.prototype.tweet = function (e) {
     //エンターキーが押された時の挙動と言うのは”改行”であるが、今回の場合は改行をしないようにしているということになる。
     var $tweetBody = $("#js-tweet-body");
     var body = $tweetBody.val(); //投稿内容の変数格納
-    if(body.length !== 0){
+    if (body.length !== 0) {
       var tweet = new Tweet(body);
       this.tweets.unshift(tweet);
       this.render();
@@ -59,28 +66,41 @@ App.prototype.tweet = function (e) {
 };
 
 //特定のuuidを持つtweetを配列から検索する関数
-App.prototype.tweetIndexByUuid = function(uuid){
+App.prototype.tweetIndexByUuid = function(uuid) {
   var i = this.tweets.length;
 
-  while (i--){
-    if(this.tweets[i].uuid === uuid){
+  while (i--) {
+    if (this.tweets[i].uuid === uuid) {
       return i;
     }
   }
 };
 
 //特定のuuidを持つtweetを配列から削除するメソッド
-App.prototype.destroy = function(e){
-  e.preventDefault();//aタグがほんらい持っている画面繊維をキャンセルする
+App.prototype.destroy = function(e) {
+  e.preventDefault(); //aタグがほんらい持っている画面繊維をキャンセルする
   var uuid = $(e.target).closest('section').data('uuid');
-  this.tweets.splice(this.tweetIndexByUuid(uuid),1);
+  this.tweets.splice(this.tweetIndexByUuid(uuid), 1);
   //splice()によって第一引数で指定したindexから第二引数でしていしている"１要素分"削除するという意味になる。
   this.render();
 };
 
-App.prototype.render = function (){
+//特定のuuidを持つtweetをファボするメソッド
+App.prototype.favAction = function(e) {
+  e.preventDefault(); //aタグがほんらい持っている画面繊維をキャンセルする
+  var uuid = $(e.currentTarget).closest('section').data('uuid');
+  var tweet = this.tweets[this.tweetIndexByUuid(uuid)];
+  // (tweet.isFaborited) ? tweet.unfavorite() : tweet.favarite();
+  if(tweet.isFavorited) {
+    tweet.unfavorite()
+  } else {
+    tweet.favorite()
+  }
+  this.render()
+};
+
+App.prototype.render = function() {
   $('#js-tweets').html(this.tweetTemplate(this.tweets));
-  console.log("rendered");
 }
 
 // applicationの起動
