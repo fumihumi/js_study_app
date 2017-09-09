@@ -74,6 +74,7 @@ App.prototype.destroy = function(e){
   e.preventDefault();//aタグがほんらい持っている画面繊維をキャンセルする
   var uuid = $(e.target).closest('section').data('uuid');
   this.tweets.splice(this.tweetIndexByUuid(uuid),1);
+  //splice()によって第一引数で指定したindexから第二引数でしていしている"１要素分"削除するという意味になる。
   this.render();
 };
 
