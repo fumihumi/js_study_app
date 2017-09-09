@@ -19,6 +19,7 @@ var utils = {
 var App = function() {
   this.tweets = [];
   this.bindEvents();
+  this.tweetTemplate = Handlebars.compile($("#js-tweet-template").html());
 }
 
 App.prototype.bindEvents = function() {
@@ -51,6 +52,10 @@ App.prototype.tweet = function (e) {
     }
   }
 };
+
+App.prototype.render = function (){
+  $("#js-tweets").html(this.tweetTemplate(this.tweets));
+}
 
 // applicationの起動
 $(function() {
