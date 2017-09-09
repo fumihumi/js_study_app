@@ -18,7 +18,14 @@ var utils = {
 
 var App = function() {
 }
-
+var Tweet = function(body){
+  //Tweetという関数オブジェクトにプロパティを追加していく。
+//コンストラクタ関数には生成するオブジェクトにもたせたい情報をthis.[プロパティ名]として定義していく
+//今回のもたせたい情報は[uuid,body,is favorited]の三つなのでそれぞれ
+  this.uuid = utils.uuid()
+  this.body = body
+  this.isFaborited = false
+}
 
 // applicationの起動
 $(function() {
