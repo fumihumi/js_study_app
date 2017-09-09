@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>handlebars.js Test</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="handlebars.js"></script>
+	</head>
+	<body>
+		<div id="content">
+		</div>
+
+		<script id="entry-template" type="text/x-handlebars-template">
+			<div class= "entry">
+				 <h1>{{title}}</h1>
+				 <div class="body">
+					 {{body}}<br/>
+					 {{body_escape}}<br>
+					 {{{body_escape}}}
+				 </div>
+			</div>
+		</script>
+
+		<script type="text/javascript">
+			var source = $("#entry-template").html();
+			var template = Handlebars.compile(source);
+			var context = {
+				title: "My New Post",
+				body: "This is my first post!",
+				body_escape: "<strong>escape</strong>"
+			}
+			var html = template (context);
+			$("#context").html(html);</script>
+		</script>
+
+	</body>
+</html>
