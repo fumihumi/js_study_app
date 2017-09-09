@@ -32,9 +32,10 @@ var Tweet = function(body){
   //Tweetという関数オブジェクトにプロパティを追加していく。
 //コンストラクタ関数には生成するオブジェクトにもたせたい情報をthis.[プロパティ名]として定義していく
 //今回のもたせたい情報は[uuid,body,is favorited]の三つなのでそれぞれ
-  this.uuid = utils.uuid()
-  this.body = body
-  this.isFaborited = false
+  this.uuid = utils.uuid();
+  this.body = body;
+  this.createdAt;
+  this.isFaborited = false;
 }
 App.prototype.tweet = function (e) {
   //引数の”e”にはイベント情報が詰まっている。
@@ -51,6 +52,17 @@ App.prototype.tweet = function (e) {
       this.tweets.unshift(tweet);
       this.render();
       $tweetBody.val("");
+    }
+  }
+};
+
+//特定のuuidを持つtweetを配列から検索する関数
+App.prototype.tweetIndexByUuid = function(uuid){
+  var i = this.tweets.length;
+
+  while (i--){
+    if(this.tweets[i].uuid === uuid){
+      return i;
     }
   }
 };
