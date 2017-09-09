@@ -17,8 +17,16 @@ var utils = {
 }
 
 var App = function() {
-  this.tweets = []
+  this.tweets = [];
+  this.bindEvents();
 }
+
+App.prototype.bindEvents = function() {
+  $('#js-tweet-body').on('keydown', this.tweet.bind(this));
+  //bindは関数オブジェクトに対して利用することが多い？
+  //今回の場合はbind(this)とすることで、Appのtweetプロパティを明示的に表している。
+};
+
 var Tweet = function(body){
   //Tweetという関数オブジェクトにプロパティを追加していく。
 //コンストラクタ関数には生成するオブジェクトにもたせたい情報をthis.[プロパティ名]として定義していく
@@ -29,10 +37,10 @@ var Tweet = function(body){
 }
 App.prototype.tweet = function (e) {
   //引数の”e”にはイベント情報が詰まっている。
-  if(e.keycode == 13){
+  if(e.keyCode == 13){
     //e.keycodeとしてあげることで"e"のイベントが発生した時にタイプされていたキーを取得することができる。
     //keycode == 13 というのはenterが押された時のコード。
-    e.preventdefault();
+    e.preventDefault();
     //e.preventdefault(); この一文はそのイベントがもともともっている挙動を止める役割をしている。
     //エンターキーが押された時の挙動と言うのは”改行”であるが、今回の場合は改行をしないようにしているということになる。
     var $tweetBody = $("#js-tweet-body");
