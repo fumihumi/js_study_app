@@ -49,6 +49,8 @@ App.prototype.tweet = function (e) {
     if(body.length !== 0){
       var tweet = new Tweet(body)
       this.tweets.unshift(tweet);
+      this.render();
+      $tweetBody.val("");
     }
   }
 };
