@@ -17,6 +17,7 @@ var utils = {
 }
 
 var App = function() {
+  this.tweets = []
 }
 var Tweet = function(body){
   //Tweetという関数オブジェクトにプロパティを追加していく。
@@ -26,6 +27,22 @@ var Tweet = function(body){
   this.body = body
   this.isFaborited = false
 }
+App.prototype.tweet = function (e) {
+  //引数の”e”にはイベント情報が詰まっている。
+  if(e.keycode == 13){
+    //e.keycodeとしてあげることで"e"のイベントが発生した時にタイプされていたキーを取得することができる。
+    //keycode == 13 というのはenterが押された時のコード。
+    e.preventdefault();
+    //e.preventdefault(); この一文はそのイベントがもともともっている挙動を止める役割をしている。
+    //エンターキーが押された時の挙動と言うのは”改行”であるが、今回の場合は改行をしないようにしているということになる。
+    var $tweetBody = $("#js-tweet-body");
+    var body = $tweetBody.val(); //投稿内容の変数格納
+    if(body.length !== 0){
+      var tweet = new Tweet(body)
+      this.tweets.unshift(tweet);
+    }
+  }
+};
 
 // applicationの起動
 $(function() {
